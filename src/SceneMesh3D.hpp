@@ -1,14 +1,13 @@
-#define __STEREO_MESH_H
+#pragma once
 
-//#include <MathGeoLib.h>
 #include <chrono>
 #include <iostream>
 #include <fstream>
 #include <cstring>
 #include <string>
 #include <set>
- 
- 
+
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -133,7 +132,7 @@ class Kitti_dataset{
         std::vector<std::string> lidars;
         std::vector<std::string> images;
         int FrameNumber;
-    
+
     Kitti_dataset(int FrameNumber,std::string path){
         (*this).datasetPath = path;
         (*this).FrameNumber = FrameNumber;
@@ -145,11 +144,7 @@ class Kitti_dataset{
 
 
     void load_pathFiles(std::string path,std::string subFolderPath,int FrameNumber, std::vector<std::string> &pathFiles);
-    
+
 };
 
- 
-cv::Mat image;
-cv::Mat image3;
-
- 
+ void calculateDominantDeriction(Kitti_dataset dataset);

@@ -1,7 +1,7 @@
 #include "RoadDetection.hpp"
- 
+
 void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &final) {
-	 
+
 	float resolution = 0.5f;
 	pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> octree(resolution);
 	octree.setInputCloud(cloud);
@@ -22,8 +22,8 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 		if (leaf_final->points.size() >= 5) {
 			pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
 			pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
- 
-		    pcl::SACSegmentation<pcl::PointXYZ> seg; 
+
+		    pcl::SACSegmentation<pcl::PointXYZ> seg;
 			seg.setOptimizeCoefficients(false);
 			seg.setModelType(pcl::SACMODEL_PLANE);
 			seg.setMethodType(pcl::SAC_RANSAC);
@@ -32,7 +32,7 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 			seg.setInputCloud(leaf_final);
 			seg.segment(*inliers, *coefficients);
 			if (inliers->indices.size() > 3) {
- 
+
 			float a = coefficients->values[0];
 			float b = coefficients->values[1];
 			float c = coefficients->values[2];
@@ -79,7 +79,7 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 	reg.setInputCloud(cloud_center);
 
 	reg.setInputNormals(normals);
-	 
+
 	reg.setSmoothnessThreshold(5.0 / 180.0 * M_PI);
 	reg.setCurvatureThreshold(1);
 
@@ -89,7 +89,7 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 
 	int max_size = -228360;
 	int max_thes;
- 
+
 
 	for (int i = 0; i < clusters.size(); i++) {
 
@@ -105,7 +105,7 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 	pcl::PointCloud<pcl::PointXYZ> cloud_a , cloud_c;
 	pcl::copyPointCloud(*cloud_center, clusters[max_thes].indices, cloud_a);
 	cloud_c = cloud_a;
-	 
+
 	pcl::PointCloud<pcl::PointXYZ>::Ptr patwma_cloud(new pcl::PointCloud<pcl::PointXYZ>(cloud_c));
 	std::vector<int> inliers;
 	pcl::SampleConsensusModelPlane<pcl::PointXYZ>::Ptr model_p(new pcl::SampleConsensusModelPlane<pcl::PointXYZ>(patwma_cloud));
@@ -114,13 +114,11 @@ void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud
 	ransac.setDistanceThreshold(0.25);
 	ransac.computeModel();
 	ransac.getInliers(inliers);
-  
+
 	pcl::copyPointCloud(*patwma_cloud, inliers, *final);
 	return;
- 
+
 
 
 
 }
- 
-  

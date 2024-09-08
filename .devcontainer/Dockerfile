@@ -20,21 +20,19 @@ RUN apt-get update && apt-get install -y \
     libeigen3-dev \
     git-lfs \
     libboost-all-dev \
-    libvtk7-dev \
-    libflann-dev \
-    libqhull-dev \
-    libpcap-dev \
     libglew-dev \
     libpng-dev \
     libtiff-dev \
     libjpeg-dev \
     libgtk2.0-dev \
     libpcl-dev \
+    python3-pip \
+    clang-format \
+    && pip3 install pre-commit \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 \
                           --slave /usr/bin/g++ g++ /usr/bin/g++-9
 
 # Install OpenCV 4.5.5 # Install OpenCV
- 
  ARG OPENCV_VERSION=4.5.5
  RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip --no-check-certificate \
      && unzip opencv.zip
@@ -144,8 +142,27 @@ RUN apt-get update && apt-get install -y \
      && make install
 
 
+# Ensure Git is installed
+RUN git --version
+
 # Set the working directory
 WORKDIR /workspace
+
+RUN git init
+# Copy the pre-commit configuration file
+COPY .pre-commit-config.yaml /workspace/.pre-commit-config.yaml
+
+# Install pre-commit hooks
+RUN pre-commit install --install-hooks
+
+# Copy the project files into the container
+# COPY . .
+
+# # Run CMake and build the project
+# RUN cmake . && make
+
+# # Run the tests after building
+# RUN ctest --output-on-failure
 
 # Default command to run when a container starts
 CMD ["/bin/bash"]

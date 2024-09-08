@@ -9,10 +9,12 @@
         "ms-vscode.cmake-tools",
         "ms-vscode.cpptools-extension-pack",
         "mhutchie.git-graph",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "xaver.clang-format"
     ],
-    "workspaceFolder": "/workspace/RoadGaborLidar",
+    "workspaceFolder": "/workspace",
     "mounts": [
         "source=${localWorkspaceFolder},target=/workspace,type=bind"
-    ]
+    ],
+    "postCreateCommand": "pre-commit install --install-hooks"
 }
