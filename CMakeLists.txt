@@ -15,6 +15,8 @@ set(VVRFRAMEWORK_DIR "" CACHE PATH "Location of VVR Framework")
 
 
 
+
+
 find_package( OpenCV REQUIRED )
 find_package( PCL 1.9 REQUIRED )
 find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time)
@@ -22,6 +24,8 @@ find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories( ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} )
 
+
+add_subdirectory(submodules/kitti_parser)
 
 add_executable(${SOLUTIONTITLE} ${FILES_SRC})
 add_definitions( ${PCL_DEFINITIONS} )
@@ -33,7 +37,7 @@ target_link_libraries(
 
 )
 
-target_link_libraries( ${SOLUTIONTITLE} ${OpenCV_LIBS} ${Boost_LIBRARIES} )
+target_link_libraries( ${SOLUTIONTITLE} ${OpenCV_LIBS} ${Boost_LIBRARIES} kitti_parser )
 
 if( PCL_FOUND )
   # [C/C++]>[General]>[Additional Include Directories]

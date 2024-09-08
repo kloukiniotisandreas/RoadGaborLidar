@@ -3,6 +3,7 @@
 #include "src/Thread_Image.hpp"
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>
+#include <kitti_parser/Parser.h>
 
 
 int main(int argc, char* argv[])
