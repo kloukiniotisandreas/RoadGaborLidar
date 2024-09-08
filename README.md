@@ -11,5 +11,5 @@ The main contribution of this paper is the use of LIDAR data to create a mask th
 
 
 # Future Steps
-1) Code refactoring 
+1) Code refactoring
 2) Use PCL exclusively

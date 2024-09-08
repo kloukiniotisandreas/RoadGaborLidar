@@ -1,9 +1,11 @@
+#pragma once
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <pcl/octree/octree_search.h>
 #include <pcl/octree/octree_iterator.h>
- 
+
 #include <pcl/segmentation/region_growing.h>
 #include <pcl/point_types.h>
 
@@ -23,4 +25,3 @@
 using namespace pcl;
 
 void pcl_segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &final );
- 

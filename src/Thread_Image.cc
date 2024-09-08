@@ -1,3 +1,4 @@
+
 #include "Thread_Image.hpp"
 #include <pcl/visualization/pcl_visualizer.h>
 #include "pcl/point_types.h"
@@ -13,22 +14,22 @@ cv::Mat  mgetGaborKernel(cv::Size ksize, double sigma, double theta, double lamb
  	int nstds = 3;
  	int xmin, xmax, ymin, ymax;
  	double c = cos(theta), s = sin(theta);
- 
+
  	if (ksize.width > 0)
  		xmax = ksize.width / 2;
  	else
  		xmax = cvRound(std::max(fabs(nstds*sigma_x*c), fabs(nstds*sigma_y*s)));
- 
+
  	if (ksize.height > 0)
  		ymax = ksize.height / 2;
  	else
  		ymax = cvRound(std::max(fabs(nstds*sigma_x*s), fabs(nstds*sigma_y*c)));
- 
+
  	xmin = -xmax;
  	ymin = -ymax;
- 
+
  	int ktype = CV_64F;
- 
+
  	cv::Mat kernel(ymax - ymin + 1, xmax - xmin + 1, ktype);
  	double  scale = 1;
  	double ex = -0.5 / (sigma_x*sigma_x);
@@ -38,7 +39,7 @@ cv::Mat  mgetGaborKernel(cv::Size ksize, double sigma, double theta, double lamb
  	double  max = -INFINITY;
  	double  min = INFINITY;
  	//scale = sigma / (sqrt(2 * CV_PI)*2.2);
- 
+
  	double mean = 0;
  	int metr_mean = 0;
  	for (int y = ymin; y <= ymax; y++)
@@ -46,39 +47,39 @@ cv::Mat  mgetGaborKernel(cv::Size ksize, double sigma, double theta, double lamb
  		{
  			double xr = x * c + y * s;
  			double yr = -x * s + y * c;
- 
+
  			double v = scale * std::exp(ex*xr*xr + ey * yr*yr)*cos(cscale*xr + psi);
  			kernel.at<double>(ymax - y, xmax - x) = v;
- 
+
  			if (v > max)max = v;
- 
+
  			if (v < min)min = v;
- 
- 
+
+
  			mean += v;
  			metr_mean++;
- 
-  
+
+
  		}
- 	 
+
  	mean = mean / metr_mean;
- 
+
  	cv::Mat mmean(ymax - ymin + 1, xmax - xmin + 1, ktype);
  	mmean = mean;
     cv::Mat f_kernel = kernel - mmean;
  	cv::normalize(f_kernel, f_kernel, min - mean, max - mean);
-	 
+
  	return f_kernel;
 
 }
- 
+
  /*
 void Image_pr::find_votes_thead (int vx, int vy)
 {
 	pcl::PointXYZ p, vxy;
-	
+
 	p.z = 0; vxy.z = 0;
-	
+
 	int aristera = vx - image_radius;
 	if (aristera < 0)aristera = 0;
 
@@ -96,12 +97,12 @@ void Image_pr::find_votes_thead (int vx, int vy)
 			if (image_texture.at<double>(k, l) != 228360 && line1.GetLength() <= image_radius && l != vx && k != vy) {
 
 				float gwnia = image_texture.at<double>(k, l) * pi / 180;
-				
+
 
 				p.x   =   l; p.y = k;
-				vxy.x = vx; vxy.y = vy; 
-				float dist_p_vxy = pcl::geometry::distance(p, vxy);  
- 
+				vxy.x = vx; vxy.y = vy;
+				float dist_p_vxy = pcl::geometry::distance(p, vxy);
+
 				double add = 0;
 				double cos_theta;
 				if (p.x <= vx) cos_theta = asin((p.y - vy) / dist_p_vxy);
@@ -117,19 +118,19 @@ void Image_pr::find_votes_thead (int vx, int vy)
 				}
 
 			}
-			 
+
 		}
 	}
 	mtx.lock();
-	if (vote_points > score) { 
+	if (vote_points > score) {
 		score = vote_points;
 		image_vx = vy;
 		image_vy = vx;
- 
+
 	}
 	mtx.unlock();
 
-	 
+
 }
 */
 void Image_pr::find_votes_thead_l(  int vy1, int vy2)
@@ -137,7 +138,7 @@ void Image_pr::find_votes_thead_l(  int vy1, int vy2)
 	double vote_points, cos_theta, aristera, deksia, katw;
 	float gwnia;
 	pcl::PointXY  p, vxy;
-	 
+
 	for (int vy = vy1; vy < vy2; vy = vy + 4) {
 		for (int vx = 0; vx < image_cols; vx = vx + 4) {
 
@@ -151,19 +152,19 @@ void Image_pr::find_votes_thead_l(  int vy1, int vy2)
 			if (katw > image_rows)katw = image_rows;
 
 			  vote_points = 0;
-			 
+
 			for (int l = aristera; l < deksia; l++) {
 				for (int k = vy; k < katw; k++) {
-					
+
 
 					p.x = l; p.y = k;
 					vxy.x = vx; vxy.y = vy;
 					float dist_p_vxy = sqrt(pow(l - vx, 2) + pow(k - vy, 2));
-					 
+
 					if (image_texture.at<double>(k, l) != 228360 && dist_p_vxy <= image_radius && l != vx && k != vy) {
 
 						 gwnia = image_texture.at<double>(k, l) * M_PI / 180;
- 
+
 						if (p.x <= vx) cos_theta = asin((p.y - vy) / dist_p_vxy);
 						else cos_theta = M_PI - asin((p.y - vy) / dist_p_vxy);
 
@@ -179,7 +180,7 @@ void Image_pr::find_votes_thead_l(  int vy1, int vy2)
 					}
 
 				}
- 
+
 			}
 
 			mtx.lock();
@@ -192,9 +193,9 @@ void Image_pr::find_votes_thead_l(  int vy1, int vy2)
 			mtx.unlock();
 
 		}
- 
+
 	}
- 
+
 }
 void great_gabor_kernels() {
 
@@ -214,9 +215,9 @@ void great_gabor_kernels() {
 	 		gabor_kernels_i[metr].push_back(kernel_i);
 	 	}
 	 	metr++;
-	 
+
 	 }
-	 
+
 
 
 }
@@ -229,13 +230,13 @@ void strofi(cv::Mat arxiki_eikona, cv::Mat keep_max_gwnia_xwris_maska, int xan_e
 	//std::vector<vpPair>  vp_pairs;
 	//vanishing_point(keep_max_gwnia_xwris_maska, vanishing, vp_pairs);
 	//cv::circle(arxiki_eikona, cv::Point(vanishing.y, vanishing.x), 4, cv::Scalar(rand() % 255, rand() % 255, rand() % 255), cv::FILLED, 8);
-	// 
+	//
 	//simeio = cv::Point(vanishing.y, vanishing.x);
-	 
-	 
+
+
 
 }
- 
+
 std::vector<std::vector<cv::Mat>> real_m_dest(36, std::vector<cv::Mat>(5));
 std::vector<std::vector<cv::Mat>> imag_m_dest(36, std::vector<cv::Mat>(5));
 std::vector<cv::Mat> square_norm_r(36);
@@ -255,7 +256,7 @@ void aplay_filer1( cv::Mat  gabor_kernels , cv::Mat  eikona,int r_or_i, int i,in
 	 cv::filter2D( eikona, result4, CV_64F, gabor_kernels_r[i][3]);
 	 cv::filter2D( eikona, result5, CV_64F, gabor_kernels_r[i][4]);
 
-	 
+
 	 result1.copyTo(real_m_dest[i][0]);
 	 result2.copyTo(real_m_dest[i][1]);
 	 result3.copyTo(real_m_dest[i][2]);
@@ -268,13 +269,13 @@ void aplay_filer1( cv::Mat  gabor_kernels , cv::Mat  eikona,int r_or_i, int i,in
 	 cv::filter2D( eikona, result3, CV_64F, gabor_kernels_i[i][2]);
 	 cv::filter2D( eikona, result4, CV_64F, gabor_kernels_i[i][3]);
 	 cv::filter2D( eikona, result5, CV_64F, gabor_kernels_i[i][4]);
- 
+
 	 result1.copyTo(imag_m_dest[i][0]);
 	 result2.copyTo(imag_m_dest[i][1]);
 	 result3.copyTo(imag_m_dest[i][2]);
 	 result4.copyTo(imag_m_dest[i][3]);
 	 result5.copyTo(imag_m_dest[i][4]);
- 
+
 }
 void calc_sqrt(int rows,int cols, int i ) {
 
@@ -301,10 +302,10 @@ void calc_sqrt(int rows,int cols, int i ) {
 }
 cv::Mat keep_max_gwnia;
 //typedef std::pair<float, float> Gabor_pair;
- 
+
 
 void keep_max_gwnia_t(int row,int cols , cv::Mat result_eik_patwma) {
- 
+
 	float max_apokrisi = -228360;
 	float gwnia;
 	int metr_gwn = 0;
@@ -313,18 +314,18 @@ void keep_max_gwnia_t(int row,int cols , cv::Mat result_eik_patwma) {
 		for (int i = 0; i < 36; i++) {
 
 			float temp_apokrisi = pow(square_norm_r[i].at<double>(row, l), 2) + pow(square_norm_r[i].at<double>(row, l), 2);
-		 
+
 			if (temp_apokrisi > max_apokrisi) {
-	 
+
 				max_apokrisi = temp_apokrisi;
 				gwnia = metr_gwn;
-	 
+
 			}
-  
+
 			metr_gwn += 5;
- 
+
 		}
- 
+
 		if (result_eik_patwma.at<cv::Vec3b>(row, l) != cv::Vec3b(0, 0, 255)) {
 			keep_max_gwnia.at<double>(row, l) = 228360;
 		}
@@ -332,17 +333,17 @@ void keep_max_gwnia_t(int row,int cols , cv::Mat result_eik_patwma) {
 			keep_max_gwnia.at<double>(row, l) = gwnia;
 		}
 		max_apokrisi = -228360;
- 
+
 	}
- 
+
 }
 
 void Image_pr::vanishing_point() {
-  
+
 	int bima = image_rows * 0.3 / 8;
 	int k1 = 0; int k2 = bima;
 	image_th[0] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
-	image_th[1] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima; 
+	image_th[1] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
 	image_th[2] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
 	image_th[3] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
 	image_th[4] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
@@ -350,21 +351,21 @@ void Image_pr::vanishing_point() {
     image_th[6] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2); k1 = k2; k2 = k2 + bima;
 	image_th[7] = std::thread(&Image_pr::find_votes_thead_l, this, k1,k2);
 
- 
+
 	for (int ii = 0; ii < 8; ++ii) { image_th[ii].join();  }
 }
 void  Image_pr::Garbor_filter(  ) {
-	 
+
 	cv::Mat in ;
 	cv::Mat hsv_imag;
- 
+
 	cv::cvtColor(image, hsv_imag, cv::COLOR_BGR2HSV);
 
 	std::vector<cv::Mat> hsv_planes;
 	cv::split(hsv_imag, hsv_planes);
 
 	hsv_planes[2].copyTo(in);
- 
+
 	cv::Mat src_f;
 	in.convertTo(src_f, CV_64F);
 
@@ -380,13 +381,13 @@ void  Image_pr::Garbor_filter(  ) {
 		}
 		image_th[thread_nump] = std::thread(aplay_filer1, gabor_kernels_r[i][0],  src_f, 0, i, 0);
 		thread_nump++;
-		 
+
 	}
 
 	for (int i = 0; i < thread_nump; ++i) {
-		
+
 		image_th[i].join();
- 
+
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////find_sqrt_rooot of five scaling
@@ -410,7 +411,7 @@ void  Image_pr::Garbor_filter(  ) {
 
 	keep_max = cv::Mat(in.rows, in.cols, CV_64F);
 	keep_max_gwnia = cv::Mat(in.rows, in.cols, CV_64F);
- 
+
 	int metr;
 
 	thread_nump = 0;
@@ -435,7 +436,7 @@ void  Image_pr::Garbor_filter(  ) {
 	image_texture = keep_max_gwnia.clone();
 
     vanishing_point();
- 
+
 	return;
 
 }
@@ -447,5 +448,5 @@ void  Image_pr::Garbor_filter(  ) {
 		 (*this).image_cols = image.cols;
 		 (*this).image_rows = image.rows;
 		 image_radius = 0.3 * sqrt(pow(image_rows, 2) + pow(image_cols, 2));
-	
- } 
+
+ }
