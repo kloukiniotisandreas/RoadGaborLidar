@@ -197,10 +197,10 @@ void Image_pr::find_votes_thead_l(  int vy1, int vy2)
 	}
 
 }
-void great_gabor_kernels() {
+void greatGaborKernels() {
 
 
-	 double  sig = 2.1;
+	 double  sigma = 2.1;
 	 int metr = 0;
 	 for (int i = 0; i < 180; i = i + 5) {
 	 	gabor_kernels_r.resize(gabor_kernels_r.size() + 1);
@@ -209,10 +209,10 @@ void great_gabor_kernels() {
 	 		int kernel_size = 21;
 	 		cv::Mat dest;
 	 		double th = i, ps = 0;
-	 		cv::Mat kernel_r = mgetGaborKernel(cv::Size(kernel_size, kernel_size), 2.2, (i * M_PI) / 180.0, (sig * pow(2, j)) * M_PI / 180, 0.5, ps);
-	 		cv::Mat kernel_i = mgetGaborKernel(cv::Size(kernel_size, kernel_size), 2.2, (i * M_PI) / 180.0, (sig * pow(2, j)) * M_PI / 180, 0.5, (ps * M_PI) / 180);
-	 		gabor_kernels_r[metr].push_back(kernel_r);
-	 		gabor_kernels_i[metr].push_back(kernel_i);
+	 		cv::Mat kernelR = mgetGaborKernel(cv::Size(kernel_size, kernel_size), 2.2, (i * M_PI) / 180.0, (sigma * pow(2, j)) * M_PI / 180, 0.5, ps);
+	 		cv::Mat kernelI = mgetGaborKernel(cv::Size(kernel_size, kernel_size), 2.2, (i * M_PI) / 180.0, (sigma * pow(2, j)) * M_PI / 180, 0.5, (ps * M_PI) / 180);
+	 		gabor_kernels_r[metr].push_back(kernelR);
+	 		gabor_kernels_i[metr].push_back(kernelI);
 	 	}
 	 	metr++;
 

@@ -15,7 +15,7 @@
 cv::Mat  mgetGaborKernel(cv::Size ksize, double sigma, double theta, double lambd, double gamma, double psi);
 void aplay_filer1(cv::Mat  gabor_kernels, cv::Mat eikona, int r_or_i, int i, int j);
 void calc_sqrt(int rows, int cols, int i);
-void great_gabor_kernels();
+void greatGaborKernels();
 void keep_max_gwnia_t(int row, int cols, cv::Mat result_eik_patwma);
 void strofi(cv::Mat arxiki_eikona, cv::Mat keep_max_gwnia_xwris_maska, int xan_epafi, cv::Point& simeio);
 
