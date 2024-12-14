@@ -142,6 +142,21 @@ RUN apt-get update && apt-get install -y \
      && make install
 
 
+
+     # Clone the yaml-cpp repository from GitHub
+RUN git clone https://github.com/jbeder/yaml-cpp.git /tmp/yaml-cpp
+
+# Create a build directory and compile yaml-cpp
+RUN mkdir -p /tmp/yaml-cpp/build \
+    && cd /tmp/yaml-cpp/build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install
+
+# Clean up the source directory after installation
+RUN rm -rf /tmp/yaml-cpp
+
+
 # Ensure Git is installed
 RUN git --version
 
@@ -154,15 +169,6 @@ COPY .pre-commit-config.yaml /workspace/.pre-commit-config.yaml
 
 # Install pre-commit hooks
 RUN pre-commit install --install-hooks
-
-# Copy the project files into the container
-# COPY . .
-
-# # Run CMake and build the project
-# RUN cmake . && make
-
-# # Run the tests after building
-# RUN ctest --output-on-failure
 
 # Default command to run when a container starts
 CMD ["/bin/bash"]

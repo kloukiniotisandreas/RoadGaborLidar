@@ -1,0 +1,3 @@
+[submodule "submodules/kitti_parser"]
+	path = submodules/kitti_parser
+	url = https://github.com/rpng/kitti_parser

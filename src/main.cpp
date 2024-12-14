@@ -3,6 +3,7 @@
 #include "src/Thread_Image.hpp"
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>
+#include <kitti_parser/Parser.h>
 
 
 int main(int argc, char* argv[])
@@ -13,16 +14,15 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-	std::string data_path = argv[1];
-	std::string FrameNumber = argv[2];
-    std::string filename = data_path.substr(data_path.find_last_of("\\/")+1);
+	std::string dataPath = argv[1];
+	std::string frameNumber = argv[2];
 
-	std::cout << "[kitti_loader]: Opening Dataset \"" << filename << "\""<< std::endl;
-	Kitti_dataset dataset(std::stoi(FrameNumber) ,data_path);
+	std::cout << "[kitti_loader]: Opening Dataset \"" << dataPath << "\""<< std::endl;
+
+	Kitti_dataset dataset(std::stoi(frameNumber) ,dataPath);
 
 
 	calculateDominantDeriction(dataset);
-
 
 
 }
